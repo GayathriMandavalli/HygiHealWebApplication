@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HygiHeal - Health Search Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .module {
+      transition: all 0.3s ease;
+      min-height: 180px;
+    }
+    .module:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    .toggle-button {
+      width: 50px;
+      height: 24px;
+      border-radius: 9999px;
+      background-color: #ccc;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .toggle-button::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      transition: transform 0.3s ease;
+    }
+    .dark .toggle-button {
+      background-color: #4b5563;
+    }
+    .dark .toggle-button::before {
+      transform: translateX(26px);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 transition-colors duration-300" id="body">
+  <!-- Login Page -->
+  <div id="loginPage" class="flex items-center justify-center min-h-screen bg-teal-100">
+    <form id="loginForm" class="bg-white shadow-lg rounded-lg p-8 w-full max-w-sm">
+      <h2 class="text-2xl font-bold text-center text-teal-700 mb-6">Login to HygiHeal</h2>
+      <label class="block mb-4">
+        <span class="text-teal-700 font-semibold">Email</span>
+        <input type="email" id="email" required class="w-full px-4 py-2 mt-1 border border-teal-200 rounded focus:outline-none focus:ring-2 focus:ring-teal-400" />
+      </label>
+      <label class="block mb-6">
+        <span class="text-teal-700 font-semibold">Password</span>
+        <input type="password" id="password" required class="w-full px-4 py-2 mt-1 border border-teal-200 rounded focus:outline-none focus:ring-2 focus:ring-teal-400" />
+      </label>
+      <button type="submit" class="w-full bg-teal-600 text-white font-bold py-2 rounded hover:bg-teal-700">Login</button>
+    </form>
+  </div>
+
+  <!-- Main Content -->
+  <div id="mainContent" class="hidden">
+    <header class="bg-gradient-to-r from-teal-600 to-teal-500 text-white py-6 px-4 shadow-lg flex justify-between items-center relative">
+      <div class="text-center w-full">
+        <h1 class="text-3xl font-bold">HygiHeal</h1>
+        <p class="text-teal-100">Your Health & Hygiene Knowledge Base</p>
+      </div>
+      <div class="absolute top-4 right-4 flex gap-4 items-center">
+        <div class="toggle-button" onclick="toggleMode()"></div>
+        <button onclick="logout()" class="bg-white text-teal-700 px-3 py-1 rounded shadow hover:bg-gray-200 font-semibold text-sm">Logout</button>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+      <!-- Search Form -->
+      <form onsubmit="redirectToArticle(); return false;" class="bg-white rounded-xl p-6 shadow-md mb-6">
+        <div class="flex flex-col md:flex-row gap-4 items-center">
+          <div class="relative flex-grow w-full">
+            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">🔍</span>
+            <input 
+              type="text" 
+              id="searchQuery" 
+              placeholder="What are you looking for? e.g., flu remedy, dog care, hygiene tips..." 
+              class="w-full pl-12 pr-4 py-3 border-2 border-teal-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 text-gray-700 placeholder-gray-400"
+              required
+            >
+          </div>
+          <button 
+            type="submit"
+            class="px-8 py-3 bg-teal-600 text-white font-bold rounded-lg hover:bg-teal-700 transition-colors w-full md:w-auto"
+          >
+            Search
+          </button>
+        </div>
+      </form>
+
+      <!-- Categories -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="https://www.healthline.com/health/home-remedies" target="_blank" class="module bg-white rounded-xl p-6 shadow-md text-center">
+          <div class="bg-teal-100 w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4 text-2xl">🌿</div>
+          <h3 class="text-xl font-bold text-teal-800">Natural Remedies</h3>
+          <p class="mt-2 text-gray-600">Traditional home solutions</p>
+        </a>
+
+        <a href="https://kidshealth.org/en/teens/hygiene-basics.html" target="_blank" class="module bg-white rounded-xl p-6 shadow-md text-center">
+          <div class="bg-teal-100 w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4 text-2xl">🧼</div>
+          <h3 class="text-xl font-bold text-teal-800">Hygiene Essentials</h3>
+          <p class="mt-2 text-gray-600">Cleanliness best practices</p>
+        </a>
+
+        <a href="https://www.woah.org/en/what-we-do/animal-health-and-welfare/" target="_blank" class="module bg-white rounded-xl p-6 shadow-md text-center">
+          <div class="bg-teal-100 w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4 text-2xl">🐾</div>
+          <h3 class="text-xl font-bold text-teal-800">Animal Health</h3>
+          <p class="mt-2 text-gray-600">Pet care guidelines</p>
+        </a>
+
+        <a href="https://www.thesprucepets.com/bird-health-4162091" target="_blank" class="module bg-white rounded-xl p-6 shadow-md text-center">
+          <div class="bg-teal-100 w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4 text-2xl">🦜</div>
+          <h3 class="text-xl font-bold text-teal-800">Birds Health</h3>
+          <p class="mt-2 text-gray-600">Avian care specialized</p>
+        </a>
+
+        <a href="https://students.ouhsc.edu/Campus-Life/Student-Wellness/Wellness-Articles" target="_blank" class="module bg-white rounded-xl p-6 shadow-md text-center">
+          <div class="bg-teal-100 w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4 text-2xl">💪</div>
+          <h3 class="text-xl font-bold text-teal-800">Physical Wellness</h3>
+          <p class="mt-2 text-gray-600">Holistic health approaches</p>
+        </a>
+
+        <a href="https://wordwall.net/resource/28235492/personal-hygiene" target="_blank" class="module bg-white rounded-xl p-6 shadow-md text-center">
+          <div class="bg-teal-100 w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4 text-2xl">🎮</div>
+          <h3 class="text-xl font-bold text-teal-800">Fun Game</h3>
+          <p class="mt-2 text-gray-600">Get hygiene basics</p>
+        </a>
+      </div>
+    </main>
+
+    <footer class="bg-teal-50 py-6 mt-12 border-t border-teal-100">
+      <div class="container mx-auto px-4 text-center text-teal-800">
+        <p>© 2025 HygiHeal - Reliable Health Information</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const articleDatabase = {
+      "cold remedies": "https://www.webmd.com/cold-and-flu/ss/slideshow-natural-cold-and-flu-remedies",
+      "flu remedies": "https://www.webmd.com/cold-and-flu/ss/slideshow-natural-cold-and-flu-remedies",
+      "oral hygiene": "https://my.clevelandclinic.org/health/treatments/16914-oral-hygiene",
+      "dog care": "https://www.aspca.org/pet-care/dog-care",
+      "cat care": "https://www.aspca.org/pet-care/cat-care/general-cat-care",
+      "bird health": "https://www.thesprucepets.com/bird-health-4162091",
+      "personal wellness": "https://www.health.harvard.edu/staying-healthy/the-importance-of-personal-wellness",
+      "hygiene tips": "https://www.cdc.gov/healthywater/hygiene/index.html",
+      "nutrition": "https://www.choosemyplate.gov/",
+      "mental health": "https://www.nami.org/Your-Journey/Individuals-with-Mental-Illness",
+      "exercise": "https://www.healthline.com/nutrition/10-benefits-of-exercise",
+      "yoga benefits": "https://www.hopkinsmedicine.org/health/wellness-and-prevention/9-benefits-of-yoga"
+    };
+
+    function redirectToArticle() {
+      const query = document.getElementById('searchQuery').value.trim().toLowerCase();
+      for (const [keyword, url] of Object.entries(articleDatabase)) {
+        if (query.includes(keyword)) {
+          window.open(url, '_blank');
+          return;
+        }
+      }
+      window.open(`https://www.google.com/search?q=${encodeURIComponent(query + ' health and hygiene')}`, '_blank');
+    }
+
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      document.getElementById('body').classList.toggle('bg-gray-900');
+      document.getElementById('body').classList.toggle('bg-gray-50');
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (email && password) {
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("mainContent").classList.remove("hidden");
+      }
+    });
+
+    function logout() {
+      document.getElementById("mainContent").classList.add("hidden");
+      document.getElementById("loginPage").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
